@@ -16,11 +16,11 @@ fault_prepare:
     jne .normal
     cmp cx, 7
     jb .bad
-    cmp byte [si+2], ':'
+    cmp byte [si + 2], ':'
     jne .bad
-    cmp byte [si+5], ' '
+    cmp byte [si + 5], ' '
     jne .bad
-    mov ax, [si+3]
+    mov ax, [si + 3]
     mov bx, 1
     cmp ax, 'R2'
     je .selected
@@ -132,6 +132,6 @@ fault_print:
     mov si, newline
     call print
     ret
-fault_selected_name: db 'FIMODE=',0
-fault_count_name: db 'FICOUNT=',0
-fault_fired_name: db 'FIFIRE=',0
+fault_selected_name: db 'FIMODE=', 0
+fault_count_name: db 'FICOUNT=', 0
+fault_fired_name: db 'FIFIRE=', 0

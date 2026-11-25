@@ -41,8 +41,8 @@ typedef char pm_dword_width[(sizeof(pm_dword) == 4) ? 1 : -1];
 #define PM_BUFFER_SELECTOR 1u
 #define PM_BUFFER_LOGICAL 2u
 struct pm_request {
-    pm_word version, operation, flags, handle, kind, origin;
-    pm_dword pointer, count, displacement;
+  pm_word version, operation, flags, handle, kind, origin;
+  pm_dword pointer, count, displacement;
 };
 pm_word pm_read_word(const pm_byte *bytes);
 pm_dword pm_read_dword(const pm_byte *bytes);

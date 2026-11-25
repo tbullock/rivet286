@@ -22,13 +22,13 @@ _heap_gdt_install:
     mov ax, ds
     cmp ax, 0x10
     jne .bad
-    mov si, [ss:bp+6]
+    mov si, [ss:bp + 6]
     cmp si, 0xfff6
     ja .bad
-    mov bx, [ss:si+4]
+    mov bx, [ss:si + 4]
     call heap_gdt_selector
     jc .bad
-    mov ax, [ss:si+8]
+    mov ax, [ss:si + 8]
     cmp ax, 1
     ja .bad
     test ax, ax
@@ -36,25 +36,25 @@ _heap_gdt_install:
     mov cx, [ss:si]
     test cx, 15
     jnz .bad
-    mov dx, [ss:si+2]
+    mov dx, [ss:si + 2]
     cmp dx, 0x10
     jb .bad
     cmp dx, 0xff
     ja .bad
     mov ax, cx
-    add ax, [ss:si+6]
+    add ax, [ss:si + 6]
     mov ax, dx
     adc ax, 0
     cmp ax, 0xff
     ja .bad
     ; Invalidate first, then publish P last. No client can run in this interval.
-    mov byte [HEAP_GDT_MEM di+5], 0
-    mov ax, [ss:si+6]
+    mov byte [HEAP_GDT_MEM di + 5], 0
+    mov ax, [ss:si + 6]
     mov [HEAP_GDT_MEM di], ax
-    mov [HEAP_GDT_MEM di+2], cx
-    mov [HEAP_GDT_MEM di+4], dl
-    mov word [HEAP_GDT_MEM di+6], 0
-    mov byte [HEAP_GDT_MEM di+5], 0x92
+    mov [HEAP_GDT_MEM di + 2], cx
+    mov [HEAP_GDT_MEM di + 4], dl
+    mov word [HEAP_GDT_MEM di + 6], 0
+    mov byte [HEAP_GDT_MEM di + 5], 0x92
     jmp .ok
 .absent:
     call heap_gdt_clear
@@ -84,7 +84,7 @@ _heap_gdt_invalidate:
     mov ax, ds
     cmp ax, 0x10
     jne .bad
-    mov bx, [ss:bp+6]
+    mov bx, [ss:bp + 6]
     call heap_gdt_selector
     jc .bad
     call heap_gdt_clear
@@ -115,9 +115,9 @@ heap_gdt_selector:
     stc
     ret
 heap_gdt_clear:
-    mov byte [HEAP_GDT_MEM di+5], 0
+    mov byte [HEAP_GDT_MEM di + 5], 0
     mov word [HEAP_GDT_MEM di], 0
-    mov word [HEAP_GDT_MEM di+2], 0
-    mov word [HEAP_GDT_MEM di+4], 0
-    mov word [HEAP_GDT_MEM di+6], 0
+    mov word [HEAP_GDT_MEM di + 2], 0
+    mov word [HEAP_GDT_MEM di + 4], 0
+    mov word [HEAP_GDT_MEM di + 6], 0
     ret

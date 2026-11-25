@@ -19,33 +19,33 @@ privilege_launch:
     mov di, PRIV_ARMED
     mov cx, 88
     rep stosw
-    mov word [PRIV_TSS+2], 0xd000
-    mov word [PRIV_TSS+4], DATA
+    mov word [PRIV_TSS + 2], 0xd000
+    mov word [PRIV_TSS + 4], DATA
     mov ax, [dos_cs]
     mov dx, ax
     shl ax, 4
     shr dx, 12
     add ax, PRIV_TSS
     adc dx, 0
-    mov [gdt_tss+2], ax
-    mov [gdt_tss+4], dl
+    mov [gdt_tss + 2], ax
+    mov [gdt_tss + 4], dl
     mov word [gdt_tss], 0x2b
-    mov byte [gdt_tss+5], 0x81
-    mov byte [gdt_client_code+5], 0xfa
-    mov byte [gdt_client_data+5], 0xf2
-    mov word [IDT+0x61*8], privilege_service
-    mov word [IDT+0x61*8+4], 0xe600
+    mov byte [gdt_tss + 5], 0x81
+    mov byte [gdt_client_code + 5], 0xfa
+    mov byte [gdt_client_data + 5], 0xf2
+    mov word [IDT + 0x61 * 8], privilege_service
+    mov word [IDT + 0x61 * 8 + 4], 0xe600
     mov word [gdt_gate], privilege_gate_entry
-    mov word [gdt_gate+2], CODE
-    mov word [gdt_gate+4], 0xe401
-    mov word [gdt_gate+6], 0
+    mov word [gdt_gate + 2], CODE
+    mov word [gdt_gate + 4], 0xe401
+    mov word [gdt_gate + 6], 0
     mov ax, 0xa0
     ltr ax
     push word 0x43
-    push word [MB+44]
+    push word [MB + 44]
     push word 2
     push word 0x3b
-    push word [MB+42]
+    push word [MB + 42]
     mov ax, 0x43
     mov ds, ax
     mov es, ax
@@ -63,14 +63,14 @@ privilege_service:
     cld
     cmp word [PRIV_FLAG], 1
     jne panic
-    cmp word [ss:bp+4], 0x3b
+    cmp word [ss:bp + 4], 0x3b
     jne panic
-    cmp word [ss:bp+10], 0x43
+    cmp word [ss:bp + 10], 0x43
     jne panic
-    test word [ss:bp+6], 0x7300
+    test word [ss:bp + 6], 0x7300
     jnz panic
-    inc word [MB+24]
-    mov ax, [ss:bp-2]
+    inc word [MB + 24]
+    mov ax, [ss:bp - 2]
     test ax, ax
     jz .version
     cmp ax, 1
@@ -87,27 +87,27 @@ privilege_service:
     je .count
 .bad:
     mov ax, 1
-    or word [ss:bp+6], 1
+    or word [ss:bp + 6], 1
     jmp .return
 .version:
     mov ax, 0x0100
     jmp .ok
 .report:
-    mov ax, [ss:bp-8]
-    mov [MB+34], ax
-    mov ax, [ss:bp-4]
-    mov [MB+36], ax
+    mov ax, [ss:bp - 8]
+    mov [MB + 34], ax
+    mov ax, [ss:bp - 4]
+    mov [MB + 36], ax
     xor ax, ax
     jmp .ok
 .seed:
-    mov ax, [MB+4]
+    mov ax, [MB + 4]
     jmp .ok
 .arm:
     cmp word [PRIV_ARMED], 0
     jne .bad
     cmp word [PRIV_COUNT], 5
     jae .bad
-    mov ax, [ss:bp-6]
+    mov ax, [ss:bp - 6]
     test ax, ax
     jz .error_ok
     cmp ax, 0x10
@@ -119,33 +119,33 @@ privilege_service:
     mov ax, 0x3b
     lsl dx, ax
     jnz .bad
-    mov ax, [ss:bp-8]
+    mov ax, [ss:bp - 8]
     cmp ax, dx
     ja .bad
     mov [PRIV_IP], ax
-    mov ax, [ss:bp-4]
+    mov ax, [ss:bp - 4]
     cmp ax, dx
     ja .bad
     cmp ax, [PRIV_IP]
     je .bad
     mov [PRIV_RECOVER], ax
-    mov ax, [ss:bp+8]
+    mov ax, [ss:bp + 8]
     mov [PRIV_SP], ax
     mov word [PRIV_ARMED], 1
     xor ax, ax
     jmp .ok
 .callback:
-    cmp word [MB+52], 0
+    cmp word [MB + 52], 0
     je .bad
-    push word [ss:bp-8]
-    call word [MB+52]
+    push word [ss:bp - 8]
+    call word [MB + 52]
     add sp, 2
     jmp .ok
 .count:
     mov ax, [PRIV_COUNT]
     jmp .ok
 .exit:
-    mov ax, [ss:bp-8]
+    mov ax, [ss:bp - 8]
     test ax, ax
     jnz .leave
     cmp word [PRIV_ARMED], 0
@@ -159,9 +159,9 @@ privilege_service:
 .leave:
     jmp program_return
 .ok:
-    and word [ss:bp+6], 0xfffe
+    and word [ss:bp + 6], 0xfffe
 .return:
-    mov [ss:bp-2], ax
+    mov [ss:bp - 2], ax
     pop es
     pop ds
     popa
@@ -170,29 +170,29 @@ privilege_service:
 
 ; Entered from the existing normalized error/no-error exception adapter.
 privilege_fault:
-    cmp word [ss:bp+8], 0x3b
+    cmp word [ss:bp + 8], 0x3b
     jne panic
-    cmp word [ss:bp+14], 0x43
+    cmp word [ss:bp + 14], 0x43
     jne panic
-    test word [ss:bp+10], 0x7300
+    test word [ss:bp + 10], 0x7300
     jnz panic
     cmp word [PRIV_ARMED], 1
     jne panic
-    cmp word [ss:bp+2], 13
+    cmp word [ss:bp + 2], 13
     jne panic
     mov ax, [PRIV_ERROR]
-    cmp [ss:bp+4], ax
+    cmp [ss:bp + 4], ax
     jne panic
     mov ax, [PRIV_IP]
-    cmp [ss:bp+6], ax
+    cmp [ss:bp + 6], ax
     jne panic
     mov ax, [PRIV_SP]
-    cmp [ss:bp+12], ax
+    cmp [ss:bp + 12], ax
     jne panic
-    cmp ax, [MB+44]
+    cmp ax, [MB + 44]
     ja panic
-    mov dx, [HEADER+22]
-    sub dx, [HEADER+20]
+    mov dx, [HEADER + 22]
+    sub dx, [HEADER + 20]
     cmp ax, dx
     jb panic
     mov bx, [PRIV_COUNT]
@@ -211,7 +211,7 @@ privilege_fault:
     loop .copy
     mov ax, [PRIV_RECOVER]
     mov [bx], ax
-    mov [ss:bp+6], ax
+    mov [ss:bp + 6], ax
     mov word [PRIV_ARMED], 0
     inc word [PRIV_COUNT]
     pop es
@@ -246,45 +246,53 @@ privilege_print:
     pop cx
     loop .fields
     ret
-priv_count_name: db 'PCOUNT=',0
-priv_names: dw priv_name_0,priv_name_1,priv_name_2,priv_name_3,priv_name_4,priv_name_5,priv_name_6,priv_name_7,priv_name_8,priv_name_9,priv_name_10,priv_name_11,priv_name_12,priv_name_13,priv_name_14,priv_name_15,priv_name_16,priv_name_17,priv_name_18,priv_name_19,priv_name_20,priv_name_21,priv_name_22,priv_name_23,priv_name_24,priv_name_25,priv_name_26,priv_name_27,priv_name_28,priv_name_29,priv_name_30,priv_name_31,priv_name_32,priv_name_33,priv_name_34,priv_name_35,priv_name_36,priv_name_37,priv_name_38,priv_name_39
-priv_name_0: db 'PVA=',0
-priv_name_1: db 'PEA=',0
-priv_name_2: db 'PIA=',0
-priv_name_3: db 'PCA=',0
-priv_name_4: db 'PFA=',0
-priv_name_5: db 'PSA=',0
-priv_name_6: db 'PDA=',0
-priv_name_7: db 'PRA=',0
-priv_name_8: db 'PVB=',0
-priv_name_9: db 'PEB=',0
-priv_name_10: db 'PIB=',0
-priv_name_11: db 'PCB=',0
-priv_name_12: db 'PFB=',0
-priv_name_13: db 'PSB=',0
-priv_name_14: db 'PDB=',0
-priv_name_15: db 'PRB=',0
-priv_name_16: db 'PVC=',0
-priv_name_17: db 'PEC=',0
-priv_name_18: db 'PIC=',0
-priv_name_19: db 'PCC=',0
-priv_name_20: db 'PFC=',0
-priv_name_21: db 'PSC=',0
-priv_name_22: db 'PDC=',0
-priv_name_23: db 'PRC=',0
-priv_name_24: db 'PVD=',0
-priv_name_25: db 'PED=',0
-priv_name_26: db 'PID=',0
-priv_name_27: db 'PCD=',0
-priv_name_28: db 'PFD=',0
-priv_name_29: db 'PSD=',0
-priv_name_30: db 'PDD=',0
-priv_name_31: db 'PRD=',0
-priv_name_32: db 'PVE=',0
-priv_name_33: db 'PEE=',0
-priv_name_34: db 'PIE=',0
-priv_name_35: db 'PCE=',0
-priv_name_36: db 'PFE=',0
-priv_name_37: db 'PSE=',0
-priv_name_38: db 'PDE=',0
-priv_name_39: db 'PRE=',0
+priv_count_name: db 'PCOUNT=', 0
+priv_names:
+    dw priv_name_0, priv_name_1, priv_name_2, priv_name_3, priv_name_4
+    dw priv_name_5, priv_name_6, priv_name_7, priv_name_8, priv_name_9
+    dw priv_name_10, priv_name_11, priv_name_12, priv_name_13, priv_name_14
+    dw priv_name_15, priv_name_16, priv_name_17, priv_name_18, priv_name_19
+    dw priv_name_20, priv_name_21, priv_name_22, priv_name_23, priv_name_24
+    dw priv_name_25, priv_name_26, priv_name_27, priv_name_28, priv_name_29
+    dw priv_name_30, priv_name_31, priv_name_32, priv_name_33, priv_name_34
+    dw priv_name_35, priv_name_36, priv_name_37, priv_name_38, priv_name_39
+priv_name_0: db 'PVA=', 0
+priv_name_1: db 'PEA=', 0
+priv_name_2: db 'PIA=', 0
+priv_name_3: db 'PCA=', 0
+priv_name_4: db 'PFA=', 0
+priv_name_5: db 'PSA=', 0
+priv_name_6: db 'PDA=', 0
+priv_name_7: db 'PRA=', 0
+priv_name_8: db 'PVB=', 0
+priv_name_9: db 'PEB=', 0
+priv_name_10: db 'PIB=', 0
+priv_name_11: db 'PCB=', 0
+priv_name_12: db 'PFB=', 0
+priv_name_13: db 'PSB=', 0
+priv_name_14: db 'PDB=', 0
+priv_name_15: db 'PRB=', 0
+priv_name_16: db 'PVC=', 0
+priv_name_17: db 'PEC=', 0
+priv_name_18: db 'PIC=', 0
+priv_name_19: db 'PCC=', 0
+priv_name_20: db 'PFC=', 0
+priv_name_21: db 'PSC=', 0
+priv_name_22: db 'PDC=', 0
+priv_name_23: db 'PRC=', 0
+priv_name_24: db 'PVD=', 0
+priv_name_25: db 'PED=', 0
+priv_name_26: db 'PID=', 0
+priv_name_27: db 'PCD=', 0
+priv_name_28: db 'PFD=', 0
+priv_name_29: db 'PSD=', 0
+priv_name_30: db 'PDD=', 0
+priv_name_31: db 'PRD=', 0
+priv_name_32: db 'PVE=', 0
+priv_name_33: db 'PEE=', 0
+priv_name_34: db 'PIE=', 0
+priv_name_35: db 'PCE=', 0
+priv_name_36: db 'PFE=', 0
+priv_name_37: db 'PSE=', 0
+priv_name_38: db 'PDE=', 0
+priv_name_39: db 'PRE=', 0

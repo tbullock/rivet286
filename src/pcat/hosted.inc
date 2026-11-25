@@ -16,7 +16,7 @@ hosted_wrapper:
     mov [cs:0x9f10], ss
     mov [cs:0x9f12], sp
     mov bp, sp
-    mov ax, [ss:bp+20]
+    mov ax, [ss:bp + 20]
     mov [cs:0x9f14], ax
     cli
     ; Publish/drop callers may already use7FF0: preserve the entire old frame
@@ -70,7 +70,7 @@ hosted_exit:
     ; scratch until the admitted CX status (or75) is selected below.
     mov ax, DATA
     mov ds, ax
-    inc word [MB+24]
+    inc word [MB + 24]
     mov word [0x9f06], 1
     mov [0x9f08], cx
     mov word [0x9f0a], 1
@@ -104,7 +104,7 @@ hosted_print:
     push cx
     mov si, [di]
     call print
-    mov bx, [di+2]
+    mov bx, [di + 2]
     mov ax, [bx]
     call hex
     mov si, newline
@@ -114,17 +114,17 @@ hosted_print:
     loop .next
     ret
 hosted_pairs:
-    dw hs_profile,0x9f00,hs_binding,0x9f02,hs_active,0x9f04
-    dw hs_exit,0x9f06,hs_user,0x9f08,hs_error,0x9f0a
-    dw hs_prepare,0x9f0c,hs_publish,0x9f0e,hs_ready,0x95c4,hs_channel,0x611e
+    dw hs_profile, 0x9f00, hs_binding, 0x9f02, hs_active, 0x9f04
+    dw hs_exit, 0x9f06, hs_user, 0x9f08, hs_error, 0x9f0a
+    dw hs_prepare, 0x9f0c, hs_publish, 0x9f0e, hs_ready, 0x95c4, hs_channel, 0x611e
 hosted_pairs_end:
-hs_profile: db 'HSPROFILE=',0
-hs_binding: db 'HSBIND=',0
-hs_active: db 'HSACTIVE=',0
-hs_exit: db 'HSEXIT=',0
-hs_user: db 'HSUSER=',0
-hs_error: db 'HSERROR=',0
-hs_prepare: db 'HSPREP=',0
-hs_publish: db 'HSPUB=',0
-hs_ready: db 'HSREADY=',0
-hs_channel: db 'HSCHAN=',0
+hs_profile: db 'HSPROFILE=', 0
+hs_binding: db 'HSBIND=', 0
+hs_active: db 'HSACTIVE=', 0
+hs_exit: db 'HSEXIT=', 0
+hs_user: db 'HSUSER=', 0
+hs_error: db 'HSERROR=', 0
+hs_prepare: db 'HSPREP=', 0
+hs_publish: db 'HSPUB=', 0
+hs_ready: db 'HSREADY=', 0
+hs_channel: db 'HSCHAN=', 0

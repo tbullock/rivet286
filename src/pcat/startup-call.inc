@@ -11,8 +11,8 @@ _startup_phys_read:
     push cx
     push dx
     push es
-    mov ax, [ss:bp+6]
-    mov dx, [ss:bp+8]
+    mov ax, [ss:bp + 6]
+    mov dx, [ss:bp + 8]
     cmp dx, 0x10
     jae .bad
     mov bx, ax
@@ -23,7 +23,7 @@ _startup_phys_read:
     or cx, dx
     mov es, cx
     mov al, [es:bx]
-    mov bx, [ss:bp+10]
+    mov bx, [ss:bp + 10]
     mov [bx], al
     xor ax, ax
     jmp .done

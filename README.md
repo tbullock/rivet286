@@ -47,3 +47,19 @@ The initial source came from IA16 Platform Lab revision
 `9600149d12e5631a6397e3abdabdd0924f71c282`. Rivet uses that tree's DOS-hosted
 kernel with heap, startup, and path services. The PM16 wire format and
 `PMTEST 0100` diagnostic signature retain their original identifiers.
+
+## Source style
+
+C sources and headers use the default LLVM style in `.clang-format`.
+
+```sh
+git ls-files -z '*.c' '*.h' | xargs -0 clang-format -i
+```
+
+Use portable C for shared logic. Keep the kernel compatible with Microsoft C
+6.00A and confine segmented pointer qualifiers to platform and ABI code. The
+kernel and the path extension each compile multiple implementation files as
+one translation unit. Preserve the order of those includes.
+
+In NASM files, place labels at the left margin, indent instructions four
+spaces, and put a space after each operand comma.

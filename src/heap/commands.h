@@ -10,14 +10,15 @@
    descriptor diagnostics remain distinct. Terminal diagnostics are sticky;
    nonterminal command diagnostics describe the most recent accepted request. */
 struct heap_command_context {
-    struct heap_state *heap;
-    const struct heap_descriptor_ops *descriptors;
-    struct heap_client_segments client;
-    heap_u16 terminal,cleanup_reference,descriptor_error,cleanup_error;
+  struct heap_state *heap;
+  const struct heap_descriptor_ops *descriptors;
+  struct heap_client_segments client;
+  heap_u16 terminal, cleanup_reference, descriptor_error, cleanup_error;
 };
 /* Caller initializes terminal/reference/diagnostics to zero once per owner.
    Decode is little endian and alignment independent. A malformed request does
    not change the record, context, allocator or descriptors. No native entry,
-   GDT publication, XMS lifetime or caller-buffer copying is implemented here. */
-heap_u16 heap_command(struct heap_command_context *,heap_u8 *,heap_u16);
+   GDT publication, XMS lifetime or caller-buffer copying is implemented here.
+ */
+heap_u16 heap_command(struct heap_command_context *, heap_u8 *, heap_u16);
 #endif

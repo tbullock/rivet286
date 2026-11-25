@@ -84,7 +84,7 @@ start:
     jne bad_args
     mov ah, 0x2c
     int 0x21
-    mov [MB+4], dx
+    mov [MB + 4], dx
     sidt [old_idtr]
     sgdt [old_gdtr]
     in al, 0x21
@@ -102,7 +102,7 @@ start:
     mov ax, [es:0x467]
     mov [old_resume], ax
     mov ax, [es:0x469]
-    mov [old_resume+2], ax
+    mov [old_resume + 2], ax
     mov ax, cs
     mov es, ax
     ; DOS tables, PIC masks, BDA vector and CMOS state are already saved.
@@ -120,14 +120,14 @@ start:
     cli
     test ax, ax
     jz .heap_prepared
-    mov [MB+28], ax
+    mov [MB + 28], ax
     jmp real_resume
 .heap_prepared:
     call hosted_publish
     cli
     test ax, ax
     jz .startup_published
-    mov [MB+28], ax
+    mov [MB + 28], ax
     jmp real_resume
 .startup_published:
     mov al, 0x8f
@@ -137,28 +137,28 @@ start:
     mov dx, ax
     shl ax, 4
     shr dx, 12
-    mov [gdt_code+2], ax
-    mov [gdt_data+2], ax
-    mov [gdt_alias+2], ax
-    mov [gdt_code+4], dl
-    mov [gdt_data+4], dl
-    mov [gdt_alias+4], dl
+    mov [gdt_code + 2], ax
+    mov [gdt_data + 2], ax
+    mov [gdt_alias + 2], ax
+    mov [gdt_code + 4], dl
+    mov [gdt_data + 4], dl
+    mov [gdt_alias + 4], dl
     mov bx, ax
     mov cx, dx
     add bx, 0x5000
     adc cx, 0
-    mov [gdt_window+2], bx
-    mov [gdt_window+4], cl
+    mov [gdt_window + 2], bx
+    mov [gdt_window + 4], cl
     mov bx, ax
     mov cx, dx
     add bx, gdt
     adc cx, 0
-    mov [gdtr+2], bx
-    mov [gdtr+4], cl
+    mov [gdtr + 2], bx
+    mov [gdtr + 4], cl
     add ax, IDT
     adc dx, 0
-    mov [idtr+2], ax
-    mov [idtr+4], dl
+    mov [idtr + 2], ax
+    mov [idtr + 4], dl
     mov di, IDT
     mov cx, 0x63
 .fill:
@@ -179,7 +179,7 @@ start:
     mov [di], ax
     add di, 8
     loop .excepts
-    mov word [IDT+0x60*8], service
+    mov word [IDT + 0x60 * 8], service
     lgdt [gdtr]
     lidt [idtr]
     smsw ax
@@ -229,29 +229,29 @@ trap:
     mov ax, DATA
     mov ds, ax
     cld
-    mov ax, [ss:bp+2]
-    mov [MB+10], ax
-    mov ax, [ss:bp+4]
-    mov [MB+12], ax
-    mov ax, [ss:bp+6]
-    mov [MB+14], ax
-    mov ax, [ss:bp+8]
-    mov [MB+16], ax
+    mov ax, [ss:bp + 2]
+    mov [MB + 10], ax
+    mov ax, [ss:bp + 4]
+    mov [MB + 12], ax
+    mov ax, [ss:bp + 6]
+    mov [MB + 14], ax
+    mov ax, [ss:bp + 8]
+    mov [MB + 16], ax
     cmp word [PRIV_FLAG], 1
     je privilege_fault
-    cmp word [MB+2], 1
+    cmp word [MB + 2], 1
     jne trap_panic
-    cmp word [ss:bp+2], 13
+    cmp word [ss:bp + 2], 13
     jne trap_panic
-    cmp word [ss:bp+4], 0x30
+    cmp word [ss:bp + 4], 0x30
     jne trap_panic
-    cmp word [ss:bp+8], CODE
+    cmp word [ss:bp + 8], CODE
     jne trap_panic
-    mov ax, [MB+30]
-    cmp [ss:bp+6], ax
+    mov ax, [MB + 30]
+    cmp [ss:bp + 6], ax
     jne trap_panic
-    mov ax, [MB+32]
-    mov [ss:bp+6], ax
+    mov ax, [MB + 32]
+    mov [ss:bp + 6], ax
     pop es
     pop ds
     popa
@@ -296,31 +296,31 @@ service:
     push bx
     mov bx, DATA
     mov ds, bx
-    inc word [MB+24]
+    inc word [MB + 24]
     test ax, ax
     jz .version
-    cmp word [MB+2], 4
+    cmp word [MB + 2], 4
     jne .unsupported
     cmp ax, 2
     je .seed
     cmp ax, 1
     jne .unsupported
-    mov bx, [ss:bp-4]
-    mov [MB+34], bx
-    mov [MB+36], cx
+    mov bx, [ss:bp - 4]
+    mov [MB + 34], bx
+    mov [MB + 36], cx
     xor ax, ax
     jmp .success
 .seed:
-    mov ax, [MB+4]
+    mov ax, [MB + 4]
     jmp .success
 .version:
     mov ax, 0x0100
 .success:
-    and word [ss:bp+6], 0xfffe
+    and word [ss:bp + 6], 0xfffe
     jmp .return
 .unsupported:
     mov ax, 1
-    or word [ss:bp+6], 1
+    or word [ss:bp + 6], 1
 .return:
     pop bx
     pop ds
@@ -338,7 +338,7 @@ real_resume:
     lidt [old_idtr]
     lgdt [old_gdtr]
     smsw ax
-    mov [MB+22], ax
+    mov [MB + 22], ax
     test ax, 1
     jnz panic
     mov ax, [original_msw]
@@ -347,7 +347,7 @@ real_resume:
     mov es, ax
     mov ax, [old_resume]
     mov [es:0x467], ax
-    mov ax, [old_resume+2]
+    mov ax, [old_resume + 2]
     mov [es:0x469], ax
     mov al, 0x8f
     out 0x70, al
@@ -355,7 +355,7 @@ real_resume:
     out 0x71, al
     mov al, 0x0f
     out 0x70, al
-    mov word [MB+18], 0x5253
+    mov word [MB + 18], 0x5253
     in al, 0x21
     cmp al, [pic_master]
     jne .state_bad
@@ -364,9 +364,9 @@ real_resume:
     je .state_good
 .state_bad:
     mov word [0x95ac], 0x70
-    cmp word [MB+28], 0
+    cmp word [MB + 28], 0
     jne .state_good
-    mov word [MB+28], 0x70
+    mov word [MB + 28], 0x70
 .state_good:
     ; Only real-mode DOS context reaches this cleanup; heap clients stay stopped.
     mov ax, cs
@@ -381,9 +381,9 @@ real_resume:
     cli
     test ax, ax
     jz .heap_cleaned
-    cmp word [MB+28], 0
+    cmp word [MB + 28], 0
     jne .heap_cleaned
-    mov [MB+28], ax
+    mov [MB + 28], ax
 .heap_cleaned:
     call hosted_drop
     mov ax, [dos_ss]
@@ -413,27 +413,27 @@ numeric_real_cleanup_done:
     loop .fields
     mov si, name_status
     call print
-    mov ax, [MB+28]
+    mov ax, [MB + 28]
     call hex
     mov si, newline
     call print
-    cmp word [MB+2], 4
+    cmp word [MB + 2], 4
     jne .reported
     mov si, name_value
     call print
-    mov ax, [MB+34]
+    mov ax, [MB + 34]
     call hex
     mov si, newline
     call print
     mov si, name_tests
     call print
-    mov ax, [MB+36]
+    mov ax, [MB + 36]
     call hex
     mov si, newline
     call print
     mov si, name_return
     call print
-    mov ax, [MB+38]
+    mov ax, [MB + 38]
     call hex
     mov si, newline
     call print
@@ -453,7 +453,7 @@ numeric_real_cleanup_done:
 .exit_status:
     call heap_print
     call hosted_print
-    mov bx, [MB+28]
+    mov bx, [MB + 28]
     mov ax, [dos_es]
     mov es, ax
     mov ax, [dos_ds]
@@ -526,10 +526,10 @@ exception_offsets:
     dw ex%+vec
 %assign vec vec+1
 %endrep
-msg_cpu: db 'PMTEST requires 286 or later',13,10,'$'
-msg_host: db 'PMTEST requires real mode DOS',13,10,'$'
-msg_memory: db 'PMTEST needs a complete 64 KiB DOS block',13,10,'$'
-msg_panic: db 'PMTEST unexpected protected fault',10,0
+msg_cpu: db 'PMTEST requires 286 or later', 13, 10, '$'
+msg_host: db 'PMTEST requires real mode DOS', 13, 10, '$'
+msg_memory: db 'PMTEST needs a complete 64 KiB DOS block', 13, 10, '$'
+msg_panic: db 'PMTEST unexpected protected fault', 10, 0
 %include "src/pcat/report-data.inc"
 
 times 0x800-($-$$+0x100) db 0
@@ -585,21 +585,21 @@ times 0x6000-($-$$+0x100) db 0
 times 0xa000-($-$$+0x100) db 0
 gdt:
     dq 0
-gdt_code: dw 0xffff,0
-    db 0,0x9a,0,0
-gdt_data: dw 0xffff,0
-    db 0,0x92,0,0
-gdt_window: dw 255,0
-    db 0,0x92,0,0
-gdt_alias: dw 0xffff,0
-    db 0,0x9a,0,0
-gdt_lowmem: dw 0xffff,0
-    db 0,0x92,0,0
+gdt_code: dw 0xffff, 0
+    db 0, 0x9a, 0, 0
+gdt_data: dw 0xffff, 0
+    db 0, 0x92, 0, 0
+gdt_window: dw 255, 0
+    db 0, 0x92, 0, 0
+gdt_alias: dw 0xffff, 0
+    db 0, 0x9a, 0, 0
+gdt_lowmem: dw 0xffff, 0
+    db 0, 0x92, 0, 0
     dq 0 ; selector 0030h stays invalid for the exact-fault control
-gdt_client_code: dw 0,0
-    db 0,0x9a,0,0
-gdt_client_data: dw 0,0
-    db 0,0x92,0,0
+gdt_client_code: dw 0, 0
+    db 0, 0x9a, 0, 0
+gdt_client_data: dw 0, 0
+    db 0, 0x92, 0, 0
 gdt_extra: times 11 dq 0
 gdt_tss: dq 0
 gdt_gate: dq 0

@@ -12,7 +12,7 @@ PM_COPY_NAME:
     push di
     push ds
     push es
-    mov bx, [ss:bp+4]
+    mov bx, [ss:bp + 4]
     cmp bx, 0x100
     jb .static_selector
     cmp bx, 0x7f8
@@ -28,7 +28,7 @@ PM_COPY_NAME:
     test bx, 7
     jnz .bad
 .selector_ok:
-    mov di, [ss:bp+12]
+    mov di, [ss:bp + 12]
     cmp di, 3
     ja .bad
     lar ax, bx
@@ -44,8 +44,8 @@ PM_COPY_NAME:
 .rights_ok:
     lsl ax, bx
     jnz .bad
-    mov dx, [ss:bp+6]
-    mov cx, [ss:bp+10]
+    mov dx, [ss:bp + 6]
+    mov cx, [ss:bp + 10]
     jcxz .extent_ok
     dec cx
     add dx, cx
@@ -55,8 +55,8 @@ PM_COPY_NAME:
 .extent_ok:
     cmp di, 2
     jae .ok
-    mov cx, [ss:bp+10]
-    mov si, [ss:bp+8]
+    mov cx, [ss:bp + 10]
+    mov si, [ss:bp + 8]
     cmp si, 0x6000
     jne .bounce
     cmp cx, 32
@@ -72,14 +72,14 @@ PM_COPY_NAME:
     test di, di
     jnz .copy_out
     mov di, si
-    mov si, [ss:bp+6]
+    mov si, [ss:bp + 6]
     mov ds, bx
     mov ax, 0x10
     mov es, ax
     rep movsb
     jmp .ok
 .copy_out:
-    mov di, [ss:bp+6]
+    mov di, [ss:bp + 6]
     mov es, bx
     mov ax, 0x10
     mov ds, ax

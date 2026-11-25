@@ -10,11 +10,11 @@ native_service:
     mov ax, DATA
     mov ds, ax
     mov ax, 3
-    cmp word [cs:MB+2], 4
+    cmp word [cs:MB + 2], 4
     jne .client_return
-    cmp word [cs:MB+48], 0
+    cmp word [cs:MB + 48], 0
     je .client_return
-    cmp word [cs:MB+50], 0
+    cmp word [cs:MB + 50], 0
     je .client_return
     mov ax, 1
     cmp cx, 32
@@ -25,7 +25,7 @@ native_service:
     mov word [0x6116], 1
     ; Saved original AX, not the busy status currently in AX. Only the owner
     ; of the claimed service frame may replace the channel.
-    mov ax, [ss:bp-2]
+    mov ax, [ss:bp - 2]
     mov [0x611e], ax
     mov [0x6112], ss
     mov [0x6114], sp
@@ -37,7 +37,7 @@ native_service:
     mov ds, ax
     mov es, ax
     cld
-    inc word [MB+24]
+    inc word [MB + 24]
     ; Validate writable response space before any operation has side effects.
     push word 3
     call .copy_record
@@ -47,7 +47,7 @@ native_service:
     call .copy_record
     test ax, ax
     jnz .resume
-    call word [MB+48]
+    call word [MB + 48]
     cmp word [0x611e], 0x0600
     jne .not_execute_status
     cmp ax, 10
@@ -73,11 +73,11 @@ native_service:
     mov bp, sp
     add bp, 20
 .client_return:
-    mov [ss:bp-2], ax
-    and word [ss:bp+6], 0xfffe
+    mov [ss:bp - 2], ax
+    and word [ss:bp + 6], 0xfffe
     test ax, ax
     jz .restore
-    or word [ss:bp+6], 1
+    or word [ss:bp + 6], 1
 .restore:
     pop es
     pop ds
@@ -92,7 +92,7 @@ native_service:
 .path_terminal:
     ; Same trusted segment/stack exit as the existing heap terminal branch.
     ; Never pop a client ES or IRET after post-effect publication failure.
-    mov [MB+62], ax
+    mov [MB + 62], ax
     mov word [0x6116], 0
     mov ax, 74
     jmp program_return
@@ -106,6 +106,6 @@ native_service:
     push word 0x6000
     push word [0x611a]
     push word [0x6118]
-    call word [MB+50]
+    call word [MB + 50]
     add sp, 10
     ret

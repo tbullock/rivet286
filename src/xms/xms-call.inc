@@ -19,19 +19,19 @@ _xms_raw:
     push ds
     push es
     cld
-    mov ax, [ss:bp+4]
+    mov ax, [ss:bp + 4]
     cmp ax, 0xffff
     je .discover
     ; Functions are AH values, not pre-shifted AX values.
     cmp ax, 0x00ff
     ja .missing
     mov bx, [cs:XMS_ENTRY_OFFSET]
-    or bx, [cs:XMS_ENTRY_OFFSET+2]
+    or bx, [cs:XMS_ENTRY_OFFSET + 2]
     jz .missing
     mov ah, al
     xor al, al
     xor bx, bx
-    mov dx, [ss:bp+6]
+    mov dx, [ss:bp + 6]
     ; Keep the C frame address even if a broken driver changes BP.
     push bp
     call far [cs:XMS_ENTRY_OFFSET]
@@ -39,7 +39,7 @@ _xms_raw:
     jmp .publish
 .discover:
     mov word [cs:XMS_ENTRY_OFFSET], 0
-    mov word [cs:XMS_ENTRY_OFFSET+2], 0
+    mov word [cs:XMS_ENTRY_OFFSET + 2], 0
     mov ax, 0x4300
     push bp
     int 0x2f
@@ -57,7 +57,7 @@ _xms_raw:
     or ax, dx
     jz .missing
     mov [cs:XMS_ENTRY_OFFSET], bx
-    mov [cs:XMS_ENTRY_OFFSET+2], dx
+    mov [cs:XMS_ENTRY_OFFSET + 2], dx
     mov ax, 0x0080
     jmp .publish
 .missing:
@@ -68,10 +68,10 @@ _xms_raw:
     ; Use SS for the output: driver DS/ES values are not C data selectors.
     ; Restore all caller registers and FLAGS after publishing raw results.
     cld
-    mov si, [ss:bp+8]
+    mov si, [ss:bp + 8]
     mov [ss:si], ax
-    mov [ss:si+2], bx
-    mov [ss:si+4], dx
+    mov [ss:si + 2], bx
+    mov [ss:si + 4], dx
     pop es
     pop ds
     popa

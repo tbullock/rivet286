@@ -44,7 +44,7 @@ path_execute_real:
 .tail_ready:
     mov bx, [cs:DOS_CX]
     mov [cs:0x6280], bl
-    mov byte [cs:bx+0x6281], 13
+    mov byte [cs:bx + 0x6281], 13
     ; Two zero37-byte host FCBs; no protected or caller pointers in parameters.
     xor ax, ax
     mov di, 0x6300

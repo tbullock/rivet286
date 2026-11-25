@@ -21,10 +21,10 @@ hardware_launch:
     mov bx, gdt_task
     mov si, TASK_USER
     call hardware_descriptor
-    mov word [IDT+0x62*8], 0
-    mov word [IDT+0x62*8+2], 0xb0
-    mov word [IDT+0x62*8+4], 0x8500
-    mov word [IDT+0x62*8+6], 0
+    mov word [IDT + 0x62 * 8], 0
+    mov word [IDT + 0x62 * 8 + 2], 0xb0
+    mov word [IDT + 0x62 * 8 + 4], 0x8500
+    mov word [IDT + 0x62 * 8 + 6], 0
     mov ax, 0xa0
     ltr ax
     mov word [TASK_PHASE], 1
@@ -51,7 +51,7 @@ hardware_call_return:
     test ax, ax
     jnz hardware_leave
     ; The hardware return must have cleared busy before reinitialization.
-    cmp byte [gdt_task+5], 0x81
+    cmp byte [gdt_task + 5], 0x81
     jne hardware_bad
     mov word [TASK_PHASE], 2
     mov word [TASK_RECORD], 0x616a
@@ -93,10 +93,10 @@ hardware_descriptor:
     add ax, si
     adc dx, 0
     mov word [bx], 0x2b
-    mov [bx+2], ax
-    mov [bx+4], dl
-    mov byte [bx+5], 0x81
-    mov word [bx+6], 0
+    mov [bx + 2], ax
+    mov [bx + 4], dl
+    mov byte [bx + 5], 0x81
+    mov word [bx + 6], 0
     ret
 
 hardware_initialize:
@@ -104,21 +104,21 @@ hardware_initialize:
     mov di, TASK_USER
     mov cx, 22
     rep stosw
-    mov ax, [MB+42]
-    mov [TASK_USER+0x0e], ax
-    mov word [TASK_USER+0x10], 2
-    mov word [TASK_USER+0x12], 0x0100
-    mov ax, [MB+4]
+    mov ax, [MB + 42]
+    mov [TASK_USER + 0x0e], ax
+    mov word [TASK_USER + 0x10], 2
+    mov word [TASK_USER + 0x12], 0x0100
+    mov ax, [MB + 4]
     xor ax, [TASK_PHASE]
-    mov [TASK_USER+0x16], ax
+    mov [TASK_USER + 0x16], ax
     mov ax, [TASK_PHASE]
-    mov [TASK_USER+0x18], ax
-    mov ax, [MB+44]
-    mov [TASK_USER+0x1a], ax
-    mov word [TASK_USER+0x22], 0x40
-    mov word [TASK_USER+0x24], 0x38
-    mov word [TASK_USER+0x26], 0x40
-    mov word [TASK_USER+0x28], 0x40
+    mov [TASK_USER + 0x18], ax
+    mov ax, [MB + 44]
+    mov [TASK_USER + 0x1a], ax
+    mov word [TASK_USER + 0x22], 0x40
+    mov word [TASK_USER + 0x24], 0x38
+    mov word [TASK_USER + 0x26], 0x40
+    mov word [TASK_USER + 0x28], 0x40
     ret
 
 ; Capture first; caller's full resumed image is on SS:SP. Twenty-one words/phase:
@@ -137,26 +137,26 @@ hardware_capture:
     stosw
     smsw ax
     stosw
-    mov ax, [ss:bp+22]
+    mov ax, [ss:bp + 22]
     stosw
-    lea ax, [bp+24]
+    lea ax, [bp + 24]
     stosw
-    mov ax, [ss:bp+4]
+    mov ax, [ss:bp + 4]
     stosw
-    mov ax, [ss:bp+2]
+    mov ax, [ss:bp + 2]
     stosw
     mov ax, [TASK_USER]
     stosw
     xor ax, ax
-    mov al, [gdt_task+5]
+    mov al, [gdt_task + 5]
     stosw
-    mov ax, [TASK_USER+0x0e]
+    mov ax, [TASK_USER + 0x0e]
     stosw
-    mov ax, [TASK_USER+0x10]
+    mov ax, [TASK_USER + 0x10]
     stosw
-    mov ax, [TASK_USER+0x12]
+    mov ax, [TASK_USER + 0x12]
     stosw
-    mov ax, [TASK_USER+0x1a]
+    mov ax, [TASK_USER + 0x1a]
     stosw
     mov si, TASK_USER+0x22
     mov cx, 4
@@ -164,53 +164,53 @@ hardware_capture:
     mov ax, ss
     stosw
     xor ax, ax
-    mov al, [gdt_tss+5]
+    mov al, [gdt_tss + 5]
     stosw
-    mov ax, [MB+34]
+    mov ax, [MB + 34]
     stosw
-    mov ax, [MB+36]
+    mov ax, [MB + 36]
     stosw
-    cmp word [ss:bp+20], 0x789a
+    cmp word [ss:bp + 20], 0x789a
     jne .bad
-    cmp word [ss:bp+22], 2
+    cmp word [ss:bp + 22], 2
     jne .bad
-    cmp word [ss:bp+4], DATA
+    cmp word [ss:bp + 4], DATA
     jne .bad
-    cmp word [ss:bp+2], DATA
+    cmp word [ss:bp + 2], DATA
     jne .bad
     mov ax, ss
     cmp ax, DATA
     jne .bad
     ; Original host general registers are checked before any next switch.
-    cmp word [ss:bp+6], 0x5678
+    cmp word [ss:bp + 6], 0x5678
     jne .bad
-    cmp word [ss:bp+8], 0x4567
+    cmp word [ss:bp + 8], 0x4567
     jne .bad
-    cmp word [ss:bp+10], 0x6789
+    cmp word [ss:bp + 10], 0x6789
     jne .bad
-    cmp word [ss:bp+14], 0x1234
+    cmp word [ss:bp + 14], 0x1234
     jne .bad
-    cmp word [ss:bp+16], 0x3456
+    cmp word [ss:bp + 16], 0x3456
     jne .bad
-    cmp word [ss:bp+18], 0x2345
+    cmp word [ss:bp + 18], 0x2345
     jne .bad
-    lea ax, [bp+24]
+    lea ax, [bp + 24]
     cmp ax, [TASK_HOST_SP]
     jne .bad
     str ax
     cmp ax, 0xa0
     jne .bad
-    cmp byte [gdt_tss+5], 0x83
+    cmp byte [gdt_tss + 5], 0x83
     jne .bad
-    cmp byte [gdt_task+5], 0x81
+    cmp byte [gdt_task + 5], 0x81
     jne .bad
     cmp word [TASK_USER], 0xa0
     jne .bad
-    test word [TASK_USER+0x10], 0x4000
+    test word [TASK_USER + 0x10], 0x4000
     jnz .bad
-    cmp word [TASK_USER+0x12], 0
+    cmp word [TASK_USER + 0x12], 0
     jne .bad
-    cmp word [MB+36], 0xffff
+    cmp word [MB + 36], 0xffff
     jne .bad
     xor ax, ax
     ret
@@ -222,10 +222,10 @@ hardware_capture:
 hardware_print:
     mov di, 0x6140
     mov bp, 2
-    mov byte [hardware_name+1], 'A'
+    mov byte [hardware_name + 1], 'A'
 .phase:
     mov bx, 21
-    mov byte [hardware_name+2], 'A'
+    mov byte [hardware_name + 2], 'A'
 .field:
     mov si, hardware_name
     call print
@@ -234,11 +234,11 @@ hardware_print:
     mov si, newline
     call print
     add di, 2
-    inc byte [hardware_name+2]
+    inc byte [hardware_name + 2]
     dec bx
     jnz .field
-    inc byte [hardware_name+1]
+    inc byte [hardware_name + 1]
     dec bp
     jnz .phase
     ret
-hardware_name: db 'HAA=',0
+hardware_name: db 'HAA=', 0

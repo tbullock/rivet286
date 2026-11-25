@@ -189,7 +189,7 @@ dos_real_resume:
     mov es, ax
     mov ax, [old_resume]
     mov [es:0x467], ax
-    mov ax, [old_resume+2]
+    mov ax, [old_resume + 2]
     mov [es:0x469], ax
     mov al, 0x8f
     out 0x70, al
@@ -320,9 +320,9 @@ dos_protected_resume:
 
 dos_heap_reenter_failure:
     mov word [DOS_BUSY], 0
-    cmp word [MB+28], 0
+    cmp word [MB + 28], 0
     jne .status_saved
-    mov [MB+28], ax
+    mov [MB + 28], ax
 .status_saved:
     mov word [reset_target], real_resume
     jmp real_resume

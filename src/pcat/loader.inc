@@ -11,7 +11,7 @@ launch_program:
     ; Save caller segments before installing the writable kernel data alias.
     mov ax, DATA
     mov ds, ax
-    mov [MB+40], sp
+    mov [MB + 40], sp
     mov word [0x9f04], 1
     cmp word [PRIV_FLAG], 1
     je privilege_launch
@@ -38,9 +38,9 @@ launch_program:
     mov word [0x6402], 0x95a3
     mov word [0x6404], 0x1e78
     mov word [0x6406], 0xe187
-    mov ax, [cs:MB+46]
+    mov ax, [cs:MB + 46]
     mov ss, ax
-    mov sp, [cs:MB+44]
+    mov sp, [cs:MB + 44]
     mov ax, 0x40
     mov ds, ax
     mov es, ax
@@ -48,9 +48,9 @@ launch_program:
     push word CODE
     push word program_return
     push word 0x38
-    push word [cs:MB+42]
+    push word [cs:MB + 42]
     mov ax, 0x0100
-    mov dx, [cs:MB+4]
+    mov dx, [cs:MB + 4]
     cmp word [cs:0x9f00], 1
     jne .entry_ready
     mov bx, [cs:0x9f02]
@@ -80,9 +80,9 @@ program_return:
     cld
     mov cx, DATA
     mov ss, cx
-    mov sp, [cs:MB+40]
+    mov sp, [cs:MB + 40]
     mov ds, cx
-    mov word [MB+38], 0x5254
+    mov word [MB + 38], 0x5254
     cmp ax, 255
     jbe .status
     mov ax, 72
@@ -132,14 +132,14 @@ prepare_program:
     jb .filename
     cmp byte [si], '/'
     jne .filename
-    mov al, [si+1]
+    mov al, [si + 1]
     and al, 0xdf
     cmp al, 'P'
     je .profile_option
     cmp al, 'H'
     jne .filename
 .profile_option:
-    cmp byte [si+2], ' '
+    cmp byte [si + 2], ' '
     jne .filename
     cmp word [FAULT_SELECTED], 0
     jne bad_args
@@ -182,25 +182,25 @@ prepare_program:
     jne bad_args
     cmp word [FAULT_SELECTED], 0
     jne bad_args
-    cmp byte [FILENAME+2], 0
+    cmp byte [FILENAME + 2], 0
     jne bad_args
-    mov al, [FILENAME+1]
+    mov al, [FILENAME + 1]
     and al, 0xdf
-    mov word [MB+2], 1
+    mov word [MB + 2], 1
     cmp al, 'F'
     je .empty
-    mov word [MB+2], 2
+    mov word [MB + 2], 2
     cmp al, 'E'
     je .empty
-    mov word [MB+2], 3
+    mov word [MB + 2], 3
     cmp al, 'X'
     je .empty
 bad_args:
     mov al, 67
     jmp load_failure
 load_program:
-    mov word [MB+46], 0x40
-    mov word [MB+2], 4
+    mov word [MB + 46], 0x40
+    mov word [MB + 2], 4
     mov dx, FILENAME
     mov ax, 0x3d00
     int 0x21
@@ -212,50 +212,50 @@ load_program:
     call read_exact
     cmp word [HEADER], 0x4d50
     jne bad_format
-    cmp word [HEADER+2], 0x3631
+    cmp word [HEADER + 2], 0x3631
     jne bad_format
     cmp word [PRIV_FLAG], 0
     je .profile_ready
-    cmp word [HEADER+4], 0x0100
+    cmp word [HEADER + 4], 0x0100
     jne bad_format
 .profile_ready:
-    cmp word [HEADER+4], 0x0301
+    cmp word [HEADER + 4], 0x0301
     je load_v3
-    cmp word [HEADER+4], 0x0300
+    cmp word [HEADER + 4], 0x0300
     je load_v3
-    cmp word [HEADER+4], 0x0201
+    cmp word [HEADER + 4], 0x0201
     je load_v2
-    cmp word [HEADER+4], 0x0200
+    cmp word [HEADER + 4], 0x0200
     je load_v2
-    cmp word [HEADER+4], 0x0100
+    cmp word [HEADER + 4], 0x0100
     jne bad_format
-    cmp word [HEADER+6], 32
+    cmp word [HEADER + 6], 32
     jne bad_format
-    cmp word [HEADER+8], 1
+    cmp word [HEADER + 8], 1
     jne bad_format
-    mov ax, [HEADER+28]
-    or ax, [HEADER+30]
+    mov ax, [HEADER + 28]
+    or ax, [HEADER + 30]
     jnz bad_format
-    mov ax, [HEADER+10]
+    mov ax, [HEADER + 10]
     test ax, ax
     jz bad_format
     cmp ax, 0xff00
     ja bad_format
-    cmp [HEADER+12], ax
+    cmp [HEADER + 12], ax
     jae bad_format
-    mov ax, [HEADER+14]
+    mov ax, [HEADER + 14]
     cmp ax, 0x100
     jb bad_format
-    add ax, [HEADER+16]
+    add ax, [HEADER + 16]
     jc bad_format
-    add ax, [HEADER+18]
+    add ax, [HEADER + 18]
     jc bad_format
-    mov dx, [HEADER+22]
+    mov dx, [HEADER + 22]
     test dx, 1
     jnz bad_format
     cmp dx, 0xfffe
     ja bad_format
-    mov bx, [HEADER+20]
+    mov bx, [HEADER + 20]
     test bx, 1
     jnz bad_format
     cmp bx, 512
@@ -264,15 +264,15 @@ load_program:
     jc bad_format
     cmp ax, dx
     ja bad_format
-    mov ax, [HEADER+10]
+    mov ax, [HEADER + 10]
     xor dx, dx
-    add ax, [HEADER+16]
+    add ax, [HEADER + 16]
     adc dx, 0
     add ax, 32
     adc dx, 0
-    cmp ax, [HEADER+24]
+    cmp ax, [HEADER + 24]
     jne bad_format
-    cmp dx, [HEADER+26]
+    cmp dx, [HEADER + 26]
     jne bad_format
     mov bx, 0x2000
     call client_allocate
@@ -286,7 +286,7 @@ load_program:
     rep stosw
     ; Code bytes are loaded at offset zero. Data has an explicit near offset.
     mov bx, [file_handle]
-    mov cx, [HEADER+10]
+    mov cx, [HEADER + 10]
     xor dx, dx
     mov ax, [client_segment]
     push ds
@@ -294,8 +294,8 @@ load_program:
     call read_exact
     pop ds
     mov bx, [file_handle]
-    mov cx, [HEADER+16]
-    mov dx, [HEADER+14]
+    mov cx, [HEADER + 16]
+    mov dx, [HEADER + 14]
     mov ax, [client_data_segment]
     push ds
     mov ds, ax
@@ -314,25 +314,25 @@ load_program:
     ; Poisoned backing makes a missing BSS clear visible to the client test.
     mov ax, [client_data_segment]
     mov es, ax
-    mov di, [HEADER+14]
-    add di, [HEADER+16]
-    mov cx, [HEADER+18]
+    mov di, [HEADER + 14]
+    add di, [HEADER + 16]
+    mov cx, [HEADER + 18]
     xor ax, ax
     rep stosb
-    mov ax, [HEADER+12]
-    mov [MB+42], ax
-    mov ax, [HEADER+22]
-    mov [MB+44], ax
+    mov ax, [HEADER + 12]
+    mov [MB + 42], ax
+    mov ax, [HEADER + 22]
+    mov [MB + 44], ax
     mov ax, [client_segment]
     mov di, gdt_client_code
     call client_base
-    mov ax, [HEADER+10]
+    mov ax, [HEADER + 10]
     dec ax
     mov [gdt_client_code], ax
     mov ax, [client_data_segment]
     mov di, gdt_client_data
     call client_base
-    mov ax, [HEADER+22]
+    mov ax, [HEADER + 22]
     dec ax
     mov [gdt_client_data], ax
     mov ax, cs
@@ -348,8 +348,8 @@ client_base:
     mov dx, ax
     shl ax, 4
     shr dx, 12
-    mov [di+2], ax
-    mov [di+4], dl
+    mov [di + 2], ax
+    mov [di + 4], dl
     ret
 read_exact:
     jcxz .done

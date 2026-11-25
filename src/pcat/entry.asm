@@ -35,7 +35,7 @@ _machine_msw:
     smsw ax
     ret
 ; Near integer observation helpers for the numeric query's private scratch.
- ; Preserve BX/BP, read no coprocessor state, and leave PIC OCW3 selecting ISR.
+; Preserve BX/BP, read no coprocessor state, and leave PIC OCW3 selecting ISR.
 
 global _machine_far_call
 _machine_far_call:
