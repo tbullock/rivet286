@@ -1,0 +1,104 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXFileReference section */
+		1C2D384B0000000000000001 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		1C2D384B0000000000000002 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		1C2D384B0000000000000003 /* src */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = src;
+			sourceTree = "<group>";
+		};
+		1C2D384B0000000000000004 /* examples */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = examples;
+			sourceTree = "<group>";
+		};
+		1C2D384B0000000000000005 /* docs */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = docs;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXGroup section */
+		1C2D384B0000000000000006 = {
+			isa = PBXGroup;
+			children = (
+				1C2D384B0000000000000001 /* README.md */,
+				1C2D384B0000000000000002 /* Makefile */,
+				1C2D384B0000000000000003 /* src */,
+				1C2D384B0000000000000004 /* examples */,
+				1C2D384B0000000000000005 /* docs */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		1C2D384B0000000000000007 /* Rivet286 */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = Rivet286.xcodeproj/build.sh;
+			buildConfigurationList = 1C2D384B000000000000000A /* Build configuration list for PBXLegacyTarget "Rivet286" */;
+			buildPhases = ();
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = "$(PROJECT_DIR)";
+			dependencies = ();
+			name = Rivet286;
+			passBuildSettingsInEnvironment = 1;
+			productName = Rivet286;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		1C2D384B0000000000000008 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1C2D384B0000000000000009 /* Build configuration list for PBXProject "Rivet286" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (en, Base);
+			mainGroup = 1C2D384B0000000000000006;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (1C2D384B0000000000000007 /* Rivet286 */);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		1C2D384B000000000000000B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {SDKROOT = macosx;};
+			name = Debug;
+		};
+		1C2D384B000000000000000C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C2D384B0000000000000009 /* Build configuration list for PBXProject "Rivet286" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (1C2D384B000000000000000B /* Debug */);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		1C2D384B000000000000000A /* Build configuration list for PBXLegacyTarget "Rivet286" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (1C2D384B000000000000000C /* Debug */);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1C2D384B0000000000000008 /* Project object */;
+}
