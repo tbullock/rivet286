@@ -202,6 +202,10 @@ Keep their implementation includes in order.
 In NASM files, put labels at the left margin, indent instructions four
 spaces and put a space after each operand comma.
 
+## License
+
+Rivet/286 is distributed under the [ISC license](LICENSE).
+
 [intel286]: https://bitsavers.trailing-edge.com/components/intel/80286/210498-005_80286_and_80287_Programmers_Reference_Manual_1987.pdf
 [intel386]: https://pdos.csail.mit.edu/6.828/2009/readings/i386/s05_03.htm
 [v86]: https://pdos.csail.mit.edu/6.828/2009/readings/i386/s15_02.htm
